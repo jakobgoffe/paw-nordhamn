@@ -1,5 +1,7 @@
 # PAW-Nordhamn  
 Privileged Access Workstation (PAW) för OT-säkerhetscase.
+FAS 1: PAW
+FAS 2: OT-komponent på RPi
 
 ---
 
@@ -300,6 +302,142 @@ För avancerad härdning rekommenderas:
 ✔ Bootloader-lösenord (GRUB-härdning)
 
 ✔ Autoupdates + unattended-upgrades
+
+---
+
+# 1️⃣4️⃣ Fas 2: UPS Implementation & Hardening (OT-Segment)
+I denna fas simuleras en kritisk OT-komponent (Uninterruptible Power Supply) med hjälp av en Raspberry Pi.
+
+Installation & Nätverk
+OS: Raspberry Pi OS Lite (Headless)
+
+IP: 192.168.68.130 (Statisk)
+
+Säkerhetshärdning (Strict Firewall)
+Implementering av "Default Deny" med strikt käll-låsning (Source Hardening). Enheten tillåter endast trafik från den betrodda PAW-enheten.
+
+```bash
+sudo nano /etc/nftables.conf
+```
+
+OBS.Var nog med IP på PAW och PI. PI endast nåbar via PAW efter detta (Det vi vill!). klistra in: 
+```bash
+#!/usr/sbin/nft -f
+flush ruleset
+table inet filter {
+    chain input {
+        type filter hook input priority 0; policy drop;
+        ct state established,related accept
+        iif "lo" accept
+        ip protocol icmp accept
+        # TILLÅT ENDAST FRÅN PAW:
+        ip saddr 192.168.68.132 tcp dport 22 accept
+        ip saddr 192.168.68.132 udp dport 514 accept
+    }
+    chain forward { type filter hook forward priority 0; policy drop; }
+    chain output { type filter hook output priority 0; policy accept; }
+}
+```
+
+---
+
+# 1️⃣5️⃣ Centraliserad Loggning (Syslog Setup)
+
+Raspberry PI konfigurerades som loggserver för att ta emot händelser från PAW.
+
+På mottagaren (UPS): Aktivera UDP-mottagning i 
+```bash
+sudo nano /etc/rsyslog.conf:
+
+# Uncommented:
+module(load="imudp")
+input(type="imudp" port="514")
+```
+
+På sändaren (PAW): Vidarebefordra alla loggar till UPS:
+```bash
+# Lade till i slutet av /etc/rsyslog.conf:
+*.* @192.168.68.130:514
+```
+
+Verifiering: Trafiken bekräftades genom att "avlyssna" nätverkskortet:
+```bash
+sudo tcpdump -i any udp port 514
+# Resultat: Paket bekräftades anlända från 192.168.68.132
+```
+Verifiering Applikationsnivå (Log Verification):
+```bash
+# På PAW (Sänd testmeddelande):
+logger "Test från PAW till UPS"
+
+# På UPS (Läs loggfil):
+tail -f /var/log/syslog
+# Resultat: "Dec 9 10:00:00 nordhamn-paw user: Test från PAW till UPS"
+```
+
+---
+
+#1️⃣6️⃣ OT-Simulering (Python Script)
+För att generera realistisk telemetri och testa loggkedjan skapades ett skript som simulerar UPS-status (spänning och batteri) på PI och skickar detta som syslog-meddelanden.
+
+öppna fil:
+```bash
+nano ups_simulation.py
+```
+
+klistra in:
+```python
+import syslog
+import time
+import random
+
+# Konfigurera logg mot lokal syslog (som sedan vidarebefordras/sparas)
+syslog.openlog("Nordhamn-UPS", syslog.LOG_PID, syslog.LOG_USER)
+
+print("UPS Simulation startad...")
+
+while True:
+    # Simulera spänningsvariation
+    voltage = random.randint(228, 235)
+    
+    # 10% risk för strömavbrott
+    status_check = random.randint(1, 10)
+    
+    if status_check == 1:
+        msg = f"WARNING: Power Grid Lost! Running on Battery. Voltage: {voltage}V"
+        syslog.syslog(syslog.LOG_WARNING, msg)
+        print(f"Skickat larm: {msg}")
+    else:
+        msg = f"INFO: Operating Normal. Grid OK. Voltage: {voltage}V"
+        syslog.syslog(syslog.LOG_INFO, msg)
+        print(f"Skickat status: {msg}")
+
+    time.sleep(5)
+```
+### Verifiering av OT-data
+För att bekräfta att simuleringen fungerar och att loggkedjan är intakt:
+
+1. **Starta simuleringen:**
+   ```bash
+   python3 ups_simulation.py
+   ```
+2. **ÖVervaka loggflödet**
+     ```bash
+   tail -f /var/log/syslog | grep "Nordhamn-UPS"
+      ```
+---
+
+# 1️⃣7️⃣ Slutsats & Nästa Steg
+Projektet har framgångsrikt etablerat en säker OT-arkitektur enligt **IEC 62443**-principer.
+
+**Uppnådda mål i FAS 2:**
+✅ **Segmentering:** Dedikerad hårdvara för OT-funktion (UPS).
+✅ **Härdning:** Minimal OS-installation och strikt "Default Deny"-brandvägg.
+✅ **Synlighet:** Centraliserad loggning av både systemhändelser och processdata.
+
+**Framtida utveckling:**
+- Implementera logganalys (SIEM) för att automatiskt larma på "Power Grid Lost".
+- Konfigurera TLS-kryptering för Syslog-trafiken.
 
 ---
 
