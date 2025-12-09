@@ -271,7 +271,7 @@ sudo powertop --auto-tune
 
 ---
 
-# 1️⃣2️⃣ Snapshot i VirtualBox  
+# 1️⃣3️⃣ Snapshot i VirtualBox  
 När PAW är konfigurerad:
 
 **VirtualBox → Machine → Take Snapshot → “PAW-Clean-Base”**
@@ -280,7 +280,7 @@ Detta gör att du kan återställa en ren säker miljö när som helst.
 
 ---
 
-# 1️⃣3️⃣ Vidare härdningsalternativ (valfritt)
+# 1️⃣4️⃣ Vidare härdningsalternativ (valfritt)
 För avancerad härdning rekommenderas:
 
 ✔ TPM-stöd & Secure Boot
@@ -305,7 +305,7 @@ För avancerad härdning rekommenderas:
 
 ---
 
-# 1️⃣4️⃣ Fas 2: UPS Implementation & Hardening (OT-Segment)
+# 1️⃣5️⃣ Fas 2: UPS Implementation & Hardening (OT-Segment)
 I denna fas simuleras en kritisk OT-komponent (Uninterruptible Power Supply) med hjälp av en Raspberry Pi.
 
 Installation & Nätverk
@@ -340,7 +340,7 @@ table inet filter {
 
 ---
 
-# 1️⃣5️⃣ Centraliserad Loggning (Syslog Setup)
+# 1️⃣6️⃣ Centraliserad Loggning (Syslog Setup)
 
 Raspberry PI konfigurerades som loggserver för att ta emot händelser från PAW.
 
@@ -376,7 +376,7 @@ tail -f /var/log/syslog
 
 ---
 
-#1️⃣6️⃣ OT-Simulering (Python Script)
+#1️⃣7️⃣ OT-Simulering (Python Script)
 För att generera realistisk telemetri och testa loggkedjan skapades ett skript som simulerar UPS-status (spänning och batteri) på PI och skickar detta som syslog-meddelanden.
 
 öppna fil:
@@ -426,7 +426,7 @@ För att bekräfta att simuleringen fungerar och att loggkedjan är intakt:
       ```
 ---
 
-# 1️⃣7️⃣ Slutsats & Nästa Steg
+# 1️⃣8️⃣ Slutsats & Nästa Steg
 Projektet har framgångsrikt etablerat en säker OT-arkitektur enligt **IEC 62443**-principer.
 
 **Uppnådda mål i FAS 2:**
