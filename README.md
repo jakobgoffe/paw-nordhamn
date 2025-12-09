@@ -343,6 +343,9 @@ table inet filter {
 # 1️⃣6️⃣ Centraliserad Loggning (Syslog Setup)
 
 Raspberry PI konfigurerades som loggserver för att ta emot händelser från PAW.
+> ℹ️ **Arkitektonisk Notering:** > I en skarp produktionsmiljö (Production Environment) skulle loggservern vara en dedikerad instans (t.ex. en SIEM-lösning eller dedikerad Syslog-server) separerad från OT-utrustningen.  
+> 
+> I denna labbmiljö agerar OT-komponenten (Raspberry Pi) även loggmottagare (Syslog Server) för att demonstrera konfiguration av `rsyslog` och loggflöden utan att kräva ytterligare virtualiserad hårdvara. Detta avviker från principen om "Single Purpose Devices" men fyller ett pedagogiskt syfte för att visa loggkedjan.
 
 På mottagaren (UPS): Aktivera UDP-mottagning i 
 ```bash
