@@ -454,7 +454,23 @@ Loggflödet bekräftat. PAW skickar systemhändelser och UPS tar emot dem korrek
 
 ---
 
-# 1️⃣8️⃣ Slutsats & Nästa Steg
+# 1️⃣8️⃣ Riskanalys & Säkerhetsvalidering
+För att säkerställa systemets integritet genomfördes en hotmodellering (Threat Modeling) av arkitekturen.
+
+### 🛡️ Hotmodell (Threat Matrix)
+
+| Hot (Threat) | Beskrivning | Mitigering (Åtgärd) | Status |
+| :--- | :--- | :--- | :--- |
+| **Lateral Movement** | Angripare hoppar från kontorsnät till OT-nät. | **Source Hardening:** Endast PAW-IP tillåts kommunicera med OT-enheten (via nftables). | ✅ Implementerad |
+| **Rogue Devices** | Okänd USB-sticka sätts i PAW. | **USBGuard:** Blockerar per automatik alla nya USB-HID/Storage-enheter som inte är whitelistade. | ✅ Implementerad |
+| **Blind Spots** | OT-enhet attackeras utan spår. | **Central Log:** Alla `auth` och `syslog` skickas till PAW för analys. | ✅ Implementerad |
+| **Brute Force** | Gissning av SSH-lösenord. | **Rate Limiting:** Fail2ban konfigurerat för att bannlysa IP-adresser vid upprepade misslyckade försök. | ✅ Implementerad |
+
+*> **Slutsats:** Genom att kombinera nätverkssegmentering (Host Firewall) med fysisk port-säkerhet (USBGuard) och centraliserad loggning har attackytan minimerats kraftigt jämfört med en standardinstallation.*
+
+---
+
+# 1️⃣9️⃣ Slutsats & Nästa Steg
 Projektet har framgångsrikt etablerat en säker OT-arkitektur enligt **IEC 62443**-principer.
 
 **Uppnådda mål i FAS 2:**
