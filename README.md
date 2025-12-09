@@ -305,7 +305,7 @@ För avancerad härdning rekommenderas:
 
 ---
 
-# 1️⃣5️⃣ Fas 2: UPS Implementation & Hardening (OT-Segment)
+# 1️⃣5️⃣ Fas 2: UPS Implementation & Hardening (nftables)
 I denna fas simuleras en kritisk OT-komponent (Uninterruptible Power Supply) med hjälp av en Raspberry Pi.
 
 Installation & Nätverk
