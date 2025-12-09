@@ -1,7 +1,9 @@
 # PAW-Nordhamn  
 Privileged Access Workstation (PAW) för OT-säkerhetscase.
-FAS 1: PAW
-FAS 2: OT-komponent på RPi
+
+FAS 1: PAW (Oracle Virtualbox)
+
+FAS 2: OT-komponent (Raspberry Pi)
 
 ---
 
