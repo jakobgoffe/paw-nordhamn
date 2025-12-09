@@ -309,18 +309,17 @@ För avancerad härdning rekommenderas:
 I denna fas simuleras en kritisk OT-komponent (Uninterruptible Power Supply) med hjälp av en Raspberry Pi.
 
 Installation & Nätverk
-OS: Raspberry Pi OS Lite (Headless)
+- OS: Raspberry Pi OS Lite (Headless)
+- IP: 192.168.68.130 (Statisk)
 
-IP: 192.168.68.130 (Statisk)
-
-Säkerhetshärdning (Strict Firewall)
+Säkerhetshärdning med nftables (Strict Firewall)
 Implementering av "Default Deny" med strikt käll-låsning (Source Hardening). Enheten tillåter endast trafik från den betrodda PAW-enheten.
 
 ```bash
 sudo nano /etc/nftables.conf
 ```
 
-OBS.Var nog med IP på PAW och PI. PI endast nåbar via PAW efter detta (Det vi vill!). klistra in: 
+klistra in: 
 ```bash
 #!/usr/sbin/nft -f
 flush ruleset
@@ -421,7 +420,7 @@ För att bekräfta att simuleringen fungerar och att loggkedjan är intakt:
    ```bash
    python3 ups_simulation.py
    ```
-2. **ÖVervaka loggflödet**
+2. **Övervaka loggflödet**
      ```bash
    tail -f /var/log/syslog | grep "Nordhamn-UPS"
       ```
