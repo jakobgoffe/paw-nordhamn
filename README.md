@@ -353,51 +353,8 @@ Bilden visar de aktiva reglerna på enheten.
 
 ---
 
-# 1️⃣6️⃣ Centraliserad Loggning (Syslog Setup)
 
-Raspberry PI konfigurerades som loggserver för att ta emot händelser från PAW.
-> ℹ️ **Arkitektonisk Notering:** > I en skarp produktionsmiljö (Production Environment) skulle loggservern vara en dedikerad instans (t.ex. en SIEM-lösning eller dedikerad Syslog-server) separerad från OT-utrustningen.  
-> 
-> I denna labbmiljö agerar OT-komponenten (Raspberry Pi) även loggmottagare (Syslog Server) för att demonstrera konfiguration av `rsyslog` och loggflöden utan att kräva ytterligare virtualiserad hårdvara. Detta avviker från principen om "Single Purpose Devices" men fyller ett pedagogiskt syfte för att visa loggkedjan.
-
-På mottagaren (UPS): Aktivera UDP-mottagning i 
-```bash
-sudo nano /etc/rsyslog.conf:
-
-# Uncommented:
-module(load="imudp")
-input(type="imudp" port="514")
-```
-
-På sändaren (PAW): Vidarebefordra alla loggar till UPS:
-```bash
-# Lade till i slutet av /etc/rsyslog.conf:
-*.* @192.168.68.130:514
-```
-
-Verifiering: Trafiken bekräftades genom att "avlyssna" nätverkskortet:
-```bash
-sudo tcpdump -i any udp port 514
-# Resultat: Paket bekräftades anlända från 192.168.68.132
-```
-Verifiering Applikationsnivå (Log Verification):
-```bash
-# På PAW (Sänd testmeddelande):
-logger "Test från PAW till UPS"
-
-# På UPS (Läs loggfil):
-tail -f /var/log/syslog
-# Resultat: "Dec 9 10:00:00 nordhamn-paw user: Test från PAW till UPS"
-```
-
-### 📸 Verifiering
-Loggflödet bekräftat. PAW skickar systemhändelser och UPS tar emot dem korrekt.
-
-![Syslog Verification](images/syslog_verification.png)
-
----
-
-# 1️⃣7️⃣ OT-Simulering (Python Script)
+# 1️⃣6️⃣ OT-Simulering (Python Script)
 För att generera realistisk telemetri och testa loggkedjan skapades ett skript som simulerar UPS-status (spänning och batteri) på PI och skickar detta som syslog-meddelanden.
 
 öppna fil:
@@ -450,6 +407,50 @@ För att bekräfta att simuleringen fungerar och att loggkedjan är intakt:
 Simuleringen körs och genererar kontinuerlig data om spänningsnivåer.
 
 ![OT Simulation Running](images/ot_simulation_running.png)
+
+---
+
+# 1️⃣7️⃣ Centraliserad Loggning (Syslog Setup)
+
+Raspberry PI konfigurerades som loggserver för att ta emot händelser från PAW.
+> ℹ️ **Arkitektonisk Notering:** > I en skarp produktionsmiljö (Production Environment) skulle loggservern vara en dedikerad instans (t.ex. en SIEM-lösning eller dedikerad Syslog-server) separerad från OT-utrustningen.  
+> 
+> I denna labbmiljö agerar OT-komponenten (Raspberry Pi) även loggmottagare (Syslog Server) för att demonstrera konfiguration av `rsyslog` och loggflöden utan att kräva ytterligare virtualiserad hårdvara. Detta avviker från principen om "Single Purpose Devices" men fyller ett pedagogiskt syfte för att visa loggkedjan.
+
+På mottagaren (UPS): Aktivera UDP-mottagning i 
+```bash
+sudo nano /etc/rsyslog.conf:
+
+# Uncommented:
+module(load="imudp")
+input(type="imudp" port="514")
+```
+
+På sändaren (PAW): Vidarebefordra alla loggar till UPS:
+```bash
+# Lade till i slutet av /etc/rsyslog.conf:
+*.* @192.168.68.130:514
+```
+
+Verifiering: Trafiken bekräftades genom att "avlyssna" nätverkskortet:
+```bash
+sudo tcpdump -i any udp port 514
+# Resultat: Paket bekräftades anlända från 192.168.68.132
+```
+Verifiering Applikationsnivå (Log Verification):
+```bash
+# På PAW (Sänd testmeddelande):
+logger "Test från PAW till UPS"
+
+# På UPS (Läs loggfil):
+tail -f /var/log/syslog
+# Resultat: "Dec 9 10:00:00 nordhamn-paw user: Test från PAW till UPS"
+```
+
+### 📸 Verifiering
+Loggflödet bekräftat. PAW skickar systemhändelser och UPS tar emot dem korrekt.
+
+![Syslog Verification](images/syslog_verification.png)
 
 ---
 
