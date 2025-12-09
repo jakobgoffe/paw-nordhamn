@@ -376,7 +376,7 @@ tail -f /var/log/syslog
 
 ---
 
-#1️⃣7️⃣ OT-Simulering (Python Script)
+# 1️⃣7️⃣ OT-Simulering (Python Script)
 För att generera realistisk telemetri och testa loggkedjan skapades ett skript som simulerar UPS-status (spänning och batteri) på PI och skickar detta som syslog-meddelanden.
 
 öppna fil:
