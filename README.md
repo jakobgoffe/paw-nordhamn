@@ -252,6 +252,11 @@ sudo usbguard set-parameter ApplyPolicyOnInsert=true
 sudo usbguard set-parameter ImplicitPolicyTarget=block
 ```
 
+### 📸 Verifiering av PAW-säkerhet
+Bilden visar att både nätverksbrandväggen (UFW) och den fysiska port-säkerheten (USBGuard) är aktiva.
+
+![PAW Security Status](images/paw_security_status.png)
+
 ---
 
 #  1️⃣1️⃣ Skapa strukturerade mappar för nycklar, projekt och säker filer
@@ -338,6 +343,12 @@ table inet filter {
 }
 ```
 
+### 📸 Verifiering av Nftables
+Bilden visar de aktiva reglerna på enheten.
+
+![Nftables Ruleset](images/nftables_source_hardening.png)
+*> **Notering:** I bilden ovan tillåts SSH (port 22) temporärt från alla källor för att möjliggöra administration via Windows i labbmiljön. I produktionskonfigurationen låses detta strikt till endast PAW.*
+
 ---
 
 # 1️⃣6️⃣ Centraliserad Loggning (Syslog Setup)
@@ -376,6 +387,11 @@ logger "Test från PAW till UPS"
 tail -f /var/log/syslog
 # Resultat: "Dec 9 10:00:00 nordhamn-paw user: Test från PAW till UPS"
 ```
+
+### 📸 Verifiering
+Loggflödet bekräftat. PAW skickar systemhändelser och UPS tar emot dem korrekt.
+
+![Syslog Verification](images/syslog_verification.png)
 
 ---
 
@@ -427,6 +443,12 @@ För att bekräfta att simuleringen fungerar och att loggkedjan är intakt:
      ```bash
    tail -f /var/log/syslog | grep "Nordhamn-UPS"
       ```
+
+     ### 📸 Verifiering av OT-data
+Simuleringen körs och genererar kontinuerlig data om spänningsnivåer.
+
+![OT Simulation Running](images/ot_simulation_running.png)
+
 ---
 
 # 1️⃣8️⃣ Slutsats & Nästa Steg
