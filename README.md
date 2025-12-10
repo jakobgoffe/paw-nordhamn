@@ -77,7 +77,22 @@ sudo systemctl restart ssh
 
 ---
 
-# 4️⃣ Full diskkryptering (LUKS)  
+# 4️⃣ Mappstruktur & Ordning
+Vi skapar en tydlig struktur för certifikat och projektfiler.
+
+```bash
+mkdir -p ~/Documents/Keys
+mkdir -p ~/Documents/SecureFiles
+mkdir -p ~/Documents/Projects
+```
+Kopiera din publika nyckel till Keys-mappen för enkel åtkomst:
+```bash
+cp ~/.ssh/id_ed25519.pub ~/Documents/Keys/paw_public_key.pub
+```
+
+---
+
+# 5️⃣ Full diskkryptering (LUKS)  
 Debian-installationen använder redan LUKS när du valde “Guided – encrypted LVM”.  
 Det skyddar hela systemet om någon får tag i .vdi-filen.
 
@@ -85,7 +100,7 @@ Ingen extra manuell åtgärd krävs här.
 
 ---
 
-# 5️⃣ Installera nödvändiga verktyg
+# 6️⃣ Installera nödvändiga verktyg
 
 ```bash
 sudo apt update
@@ -96,7 +111,7 @@ sudo apt install -y ufw vim git unzip zip openssh-client \
 
 ---
 
-# 6️⃣ Aktivera UFW-brandvägg
+# 7️⃣ Aktivera UFW-brandvägg
 
 ```bash
 sudo ufw default deny incoming
@@ -107,7 +122,7 @@ sudo ufw status verbose
 
 ---
 
-# 7️⃣ Systemskydd: Lynis, Fail2ban & AppArmor
+# 8️⃣ Systemskydd: Lynis, Fail2ban & AppArmor
 
 Detta steg aktiverar systemhärdning, skydd mot brute-force på lokala inloggningar och kör obligatoriska säkerhetsprofiler för processer.
 
@@ -142,7 +157,7 @@ sudo lynis audit system
 
 ---
 
-# 8️⃣ Skydda sudo & lokala konton 
+# 9️⃣ Skydda sudo & lokala konton 
 låser privilegier, stoppar ”sudo-spam”, kräver lösenord varje gång (MFA-liknande beteende), samt låser root-kontot helt.
 
 ```bash
@@ -178,7 +193,7 @@ paw_nordhamn ALL=(ALL:ALL) ALL
 
 ---
 
-# 9️⃣ Kernel-härdning (sysctl)
+# 🔟 Kernel-härdning (sysctl)
 Kernel-härdning skyddar systemet mot spoofing, redirect-attacker, IP forwarding, syn-floods, dåliga ICMP-paket, samt aktiverar ASLR.
 Detta är ett viktigt PAW-skydd eftersom PAW ska vara singel-purpose, isolerad och inte routa trafik eller agera gateway.
 
@@ -236,7 +251,7 @@ sudo sysctl --system
 
 ---
 
-#  🔟 USB-restriktioner (USBGuard)
+# 1️⃣1️⃣ USB-restriktioner (USBGuard)
 USBGuard blockerar ALLA USB-enheter som standard.
 Endast enheter du själv tillåter får användas.
 
@@ -276,20 +291,6 @@ Bilden visar att både nätverksbrandväggen (UFW) och den fysiska port-säkerhe
 
 ![PAW Security Status](images/paw_security_status.png)
 
----
-
-# 1️⃣1️⃣ Mappstruktur & Ordning
-Vi skapar en tydlig struktur för certifikat och projektfiler.
-
-```bash
-mkdir -p ~/Documents/Keys
-mkdir -p ~/Documents/SecureFiles
-mkdir -p ~/Documents/Projects
-```
-Kopiera din publika nyckel till Keys-mappen för enkel åtkomst:
-```bash
-cp ~/.ssh/id_ed25519.pub ~/Documents/Keys/paw_public_key.pub
-```
 ---
 
 # 1️⃣2️⃣ Energioptimering (valfritt)
