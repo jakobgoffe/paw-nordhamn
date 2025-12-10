@@ -158,6 +158,13 @@ root        ALL=(ALL:ALL) ALL
 paw_nordhamn ALL=(ALL:ALL) ALL
 
 ```
+> ℹ️ **Designbeslut: Konto-hantering & Behörighetsstyrning (RBAC)**
+> Systemet är designat för att stödja strikt behörighetskontroll:
+> * **Non-repudiation (Oavvislighet):** Inga delade konton tillåts. Root-kontot är låst och personliga konton krävs för spårbarhet.
+> * **Least Privilege:** I en skarp implementation tillämpas "Segregation of Duties".
+>    * *PAW-Admin:* Har sudo-behörighet för att underhålla systemet (patcha, konfigurera).
+>    * *OT-Operatör:* Har endast behörighet att köra specifika verktyg (t.ex. SSH mot ställverket) men saknar sudo-rättigheter att ändra PAW:ns säkerhetsinställningar.
+> * **1:1-princip:** Varje administratör ska ha en egen dedikerad PAW och unika SSH-nycklar. Detta minimerar risken för "Lateral Movement" och säkerställer att loggarna alltid visar exakt *vem* som utfört en åtgärd, snarare än bara *vilken dator* det skedde från.
 
 ---
 
