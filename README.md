@@ -42,7 +42,17 @@ sudo apt autoclean
 
 ---
 
-# 3️⃣ SSH-härdning
+# 3️⃣ SSH-härdning & Nyckelhantering
+
+Vi säkrar fjärråtkomsten och skapar PAW-enhetens digitala identitet.
+
+Skapa SSH-nyckelpar (Identitet)
+Innan vi stänger av lösenordsinloggning skapar vi nycklarna som ska användas för att administrera andra system.
+```bash
+# Generera nyckel (Ed25519 är modern standard)
+ssh-keygen -t ed25519 -C "paw-admin@nordhamn"
+# Tryck Enter på alla frågor (default-mapp, inget lösenord för denna labb)
+```
 
 ### Installerar & aktiverar SSH:
 ```bash
@@ -268,14 +278,18 @@ Bilden visar att både nätverksbrandväggen (UFW) och den fysiska port-säkerhe
 
 ---
 
-#  1️⃣1️⃣ Skapa strukturerade mappar för nycklar, projekt och säker filer
+# 1️⃣1️⃣ Mappstruktur & Ordning
+Vi skapar en tydlig struktur för certifikat och projektfiler.
 
 ```bash
 mkdir -p ~/Documents/Keys
 mkdir -p ~/Documents/SecureFiles
 mkdir -p ~/Documents/Projects
 ```
-
+Kopiera din publika nyckel till Keys-mappen för enkel åtkomst:
+```bash
+cp ~/.ssh/id_ed25519.pub ~/Documents/Keys/paw_public_key.pub
+```
 ---
 
 # 1️⃣2️⃣ Energioptimering (valfritt)
