@@ -335,7 +335,7 @@ För avancerad härdning rekommenderas:
 ---
 
 # 1️⃣5️⃣ Fas 2: UPS Implementation & Hardening (nftables)
-I denna fas simuleras en kritisk OT-komponent (Uninterruptible Power Supply) med hjälp av en Raspberry Pi.
+I denna fas simuleras en säkerhetshärdad OT-nod. Raspberry Pi-enheten agerar dubbla roller: den kör logiken för en kritisk komponent (UPS) men fungerar samtidigt som en 'Industrial Edge Gateway' som skyddar tjänsten med strikt paketfiltrering.
 
 Installation & Nätverk
 - OS: Raspberry Pi OS Lite (Headless)
