@@ -335,7 +335,7 @@ För avancerad härdning rekommenderas:
 ---
 
 # 1️⃣5️⃣ Fas 2: UPS Implementation & Hardening (nftables)
-I denna fas simuleras en säkerhetshärdad OT-nod. Raspberry Pi-enheten agerar dubbla roller: den kör logiken för en kritisk komponent (UPS) men fungerar samtidigt som en 'Industrial Edge Gateway' som skyddar tjänsten med strikt paketfiltrering.
+I denna fas simuleras en säkerhetshärdad OT-nod. Raspberry Pi-enheten agerar trippla roller: den kör logiken för en kritisk komponent (UPS) men fungerar samtidigt som en 'Industrial Edge Gateway' som skyddar tjänsten med strikt paketfiltrering, samt logserver.
 
 Installation & Nätverk
 - OS: Raspberry Pi OS Lite (Headless)
