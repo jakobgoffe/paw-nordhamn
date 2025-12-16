@@ -3,7 +3,7 @@ Privileged Access Workstation (PAW) för OT-säkerhetscase.
 
 FAS 1: PAW (Oracle Virtualbox)
 
-FAS 2: OT-komponent (Raspberry Pi)
+FAS 2: OT-nod (Raspberry Pi)
 
 ---
 
