@@ -348,6 +348,17 @@ Implementering av "Default Deny" med strikt käll-låsning (Source Hardening). E
 sudo nano /etc/nftables.conf
 ```
 
+> ℹ️ **Designbeslut: Brandväggsstrategi & Segmentering**
+> Valet av brandväggsteknik speglar enhetens roll i nätverksarkitekturen:
+>
+> * **PAW (Administrativ Arbetsstation) ➡️ Dynamisk Miljö**
+>   * **Roll:** PAW:n används av en tekniker för felsökning och underhåll mot *olika* delar av fabriken. Målen ändras beroende på vad som är trasigt.
+>   * **Verktyg (UFW):** Här prioriteras **Hanterbarhet**. UFW (Uncomplicated Firewall) ger en säker "Default Deny"-grund men tillåter administratören att smidigt hantera utgående anslutningar utan att skriva om komplex regelkod vid varje nytt uppdrag.
+>
+> * **OT-Gateway (Infrastruktur) ➡️ Statisk Miljö**
+>   * **Roll:** Denna enhet simulerar en "Industrial Edge Gateway" som skyddar bakomliggande styrsystem (PLC/UPS). Dess uppgift förändras aldrig: den ska alltid skydda samma portar från samma källor.
+>   * **Verktyg (Nftables):** Här prioriteras **Granularitet**. Vi använder rå nftables för att implementera "Source Hardening" (t.ex. *bara* PAW-IP får prata SSH). Detta skapar en statisk, extremt hård skyddsbarriär som enkla verktyg som UFW inte kan uttrycka lika precist.
+
 klistra in: 
 ```bash
 #!/usr/sbin/nft -f
